@@ -1,0 +1,29 @@
+[90m= [39m[34;4mIlluminate\Support\Collection[39;24m {#5550
+    [34mall[39m: [
+      {#5533
+        +"[1mlabel[22m": "[32mordinateur portable[39m",
+        +"[1mcategorie[22m": "[32melectronique[39m",
+      },
+      {#5415
+        +"[1mlabel[22m": "[32mtablette[39m",
+        +"[1mcategorie[22m": "[32melectronique[39m",
+      },
+      {#5480
+        +"[1mlabel[22m": "[32mt-shirt[39m",
+        +"[1mcategorie[22m": "[32mvetement[39m",
+      },
+      {#5534
+        +"[1mlabel[22m": "[32mrobe[39m",
+        +"[1mcategorie[22m": "[32mvetement[39m",
+      },
+      {#5485
+        +"[1mlabel[22m": "[32msardine[39m",
+        +"[1mcategorie[22m": "[32malimentation[39m",
+      },
+      {#5488
+        +"[1mlabel[22m": "[32mlait[39m",
+        +"[1mcategorie[22m": "[32malimentation[39m",
+      },
+    ],
+  }
+
