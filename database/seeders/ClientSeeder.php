@@ -2,10 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class ClientSeeder extends Seeder
 {
@@ -38,5 +40,8 @@ class ClientSeeder extends Seeder
         DB::table('clients')->insert([
             ['user_id' => 1],['user_id' => 2]
         ]);
+
+        $user = User::firstWhere('phone','71397764');
+        $user->assignRole(Role::where('name','client')->first());
     }
 }

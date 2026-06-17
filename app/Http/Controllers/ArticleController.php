@@ -8,8 +8,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class ArticleController extends Controller
+use Spatie\Permission\Middleware\RoleMiddleware;
+use Spatie\Permission\Middleware\PermissionMiddleware;
+
+class ArticleController extends Controller implements HasMiddleware
 {
     /**
      * Display a listing of the resource.
@@ -147,5 +152,12 @@ class ArticleController extends Controller
             Storage::disk('public')->delete($article->cover);
         }
         return redirect()->route('admin.articles.index');
+    }
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:article.view', only:['index','show']),
+            new Middleware('permission:article.create', only:['create','store']),
+        ];
     }
 }

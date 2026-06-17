@@ -5,16 +5,18 @@
     <div class="min-w-6xl max-w-7xl space-y-12">
         <div class="flex justify-between">
             <h1 class="text-3xl">Liste des Articles</h1>
-            <a href="{{ route('admin.articles.create') }}">
-                <button class="primary-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="size-4">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                    </svg>
-                    Ajouter
-                </button>
-            </a>
+            @can('article.create')
+                <a href="{{ route('admin.articles.create') }}">
+                    <button class="primary-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-4">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                        Ajouter
+                    </button>
+                </a>
+            @endcan
         </div>
         <div class="border border-gray-200">
             <table class="w-full">
@@ -34,7 +36,8 @@
                         <tr class="border-t border-gray-300 hover:bg-gray-200">
                             <td class="text-left text-sm px-3 py-2">{{ $article->id }}</td>
                             <td class="text-left text-sm px-3 py-2">
-                                <img src="{{ asset('/storage/'.$article->cover) }}" alt="" class="size-6 rounded-full">
+                                <img src="{{ asset('/storage/' . $article->cover) }}" alt=""
+                                    class="size-6 rounded-full">
                             </td>
                             <td class="text-left text-sm px-3 py-2">{{ $article->label }}</td>
                             <td class="text-left text-sm px-3 py-2">{{ $article->current_price }}</td>
