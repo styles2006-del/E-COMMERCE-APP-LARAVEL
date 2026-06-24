@@ -69,6 +69,20 @@
                         <div>{{ $message }}</div>
                     @enderror
                 </div>
+                <div>
+                    <label for="role">Role:</label>
+                    <select name="role" id="role"
+                        class="border border-gray-200 px-2 py-1 rounded rounded-lg w-full">
+                        @forelse ($roles as $role)
+                            <option value="{{ $role->id }}">{{$role->name}}</option>
+                        @empty
+                            aucun role disponible
+                        @endforelse
+                    </select>
+                    @error('role')
+                        <div>{{ $message }}</div>
+                    @enderror
+                </div>
                 <div class="flex flex-col">
                     <label for="password">Mot de passe:</label>
                     <input type="password" id="password" name="password"

@@ -158,6 +158,8 @@ class ArticleController extends Controller implements HasMiddleware
         return [
             new Middleware('permission:article.view', only:['index','show']),
             new Middleware('permission:article.create', only:['create','store']),
+            new Middleware('permission:article.update', only:['edit','update']),
+            new Middleware('permission:article.delete', only:['destroy']),
         ];
     }
 }

@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-Route::get('/bonjour/users', function() {
+Route::get('/bonjour/users', function () {
     return "bonjour la L2";
 })->name("salutation");
 
@@ -36,14 +36,14 @@ Route::get('/bonjour/users', function() {
 // });
 
 // route grouper
-Route::name('http_status.')->prefix('statut')->group(function(){
-    Route::get('', function(){
+Route::name('http_status.')->prefix('statut')->group(function () {
+    Route::get('', function () {
         return response()->json([
             'ok' => true
         ]);
     })->name('old');
 
-    Route::get('/http', function(){
+    Route::get('/http', function () {
         return response()->json([
             'ok' => true,
             'textCode' => 'success'
@@ -59,48 +59,50 @@ Route::get('/utilisateur/{id}/{name}', function (int $id, string $name) {
 });
 
 //route dynamique avec parametre optionnel
-Route::get('/user/{id}/{name?}', function (int $id, string $name='dieudonne') {
+Route::get('/user/{id}/{name?}', function (int $id, string $name = 'dieudonne') {
     return "utilisateur : $name avec pour ID : $id";
 })->where([
-    'id'=>'[0-9]+',
+    'id' => '[0-9]+',
     'name' => '[a-zA-Z]+'
 ])->name('utilisateur'); //filtre avec les regex le "+" signifie qu'on peut repeté au tant de fois les valeur entre qui sont entre les crocher
 
 //authentification
 
-Route::name('auth.')->prefix('auth')->group(function(){
+Route::name('auth.')->prefix('auth')->group(function () {
 
-    Route::get('/login',[AuthController::class,'loginForm'])->name('login');
+    Route::get('/login', [AuthController::class, 'loginForm'])->name('login');
 
-    Route::post('/login',[AuthController::class,'authenticate'])->name('login');
+    Route::post('/login', [AuthController::class, 'authenticate'])->name('login');
 
-    Route::post('/logout',[AuthController::class,'logout'])->name('logout');
-
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
 // route admin
 
-Route::name('admin.')->prefix('admin')->middleware('auth')->group(function(){
+Route::name('admin.')->prefix('admin')->middleware('auth')->group(function () {
 
     Route::resource('categories', CategoryController::class);
 
-    Route::resource('articles',ArticleController::class);
+    Route::resource('articles', ArticleController::class);
 
-    Route::resource('staff',StaffController::class);
+    Route::resource('staff', StaffController::class);
 });
 
 
-Route::get('/orders',[OrderController::class,'index'])->name('orders.index');
+Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 
-Route::put('/orders/start/{order}',[OrderController::class,'startDelivery'])->name('orders.start');
+Route::put('/orders/start/{order}', [OrderController::class, 'startDelivery'])->name('orders.start');
 
-Route::put('/orders/delivered/{order}',[OrderController::class,'deliveryConfirmed'])->name('orders.delivered');
+Route::put('/orders/delivered/{order}', [OrderController::class, 'deliveryConfirmed'])->name('orders.delivered');
 
 //route public
 
-Route::get('/articles', [HomeController::class, 'articlesListPage'])->name('home');
+Route::prefix('order')->name('order.')->group(function () {
 
-Route::get('/checkout', [HomeController::class, 'checkOutPage'])->name('checkout');
+    Route::post('/checkout', [OrderController::class, 'checkOutPage'])->name('checkout');
+
+    Route::get('/callback', [OrderController::class, 'callback'])->name('callback');
+});
 
 Route::get('/', [HomeController::class, 'homePage'])->name('homePage');
 
@@ -147,7 +149,7 @@ Route::get('/', [HomeController::class, 'homePage'])->name('homePage');
 
 
 
-Route::get('/remplir/articles',function(){
+Route::get('/remplir/articles', function () {
     //supprimer tous les articles
     $result = DB::delete('delete from articles');
 
@@ -155,15 +157,15 @@ Route::get('/remplir/articles',function(){
 
     //ajouter 1000 article
 
-    for ($i=0; $i <1000 ; $i++) {
-        $result = DB::insert("insert into articles(label,current_price,description) values (?,?,?)",["savon".$i,100,"savon pour se doucher"]);
+    for ($i = 0; $i < 1000; $i++) {
+        $result = DB::insert("insert into articles(label,current_price,description) values (?,?,?)", ["savon" . $i, 100, "savon pour se doucher"]);
     }
 
     //dump($result);
 
 });
 
-Route::get('/test/query-builder',function(){
+Route::get('/test/query-builder', function () {
     // dump(DB::table('articles')->select('label','current_price as price')
     // ->where('label','=','savon1')
     // ->where('price','>',75)
@@ -172,13 +174,13 @@ Route::get('/test/query-builder',function(){
     dump($query->get());
 });
 
-Route::get('/test/collection', function(){
+Route::get('/test/collection', function () {
     dump('collections test');
     $categorie = DB::table('categories')->get()
-    //masque pour rendre chaque labelle de la collection en majiscule
-    ->map(function ($value, $key) {
-        return strtoupper($value->label);
-    });
+        //masque pour rendre chaque labelle de la collection en majiscule
+        ->map(function ($value, $key) {
+            return strtoupper($value->label);
+        });
 
 
 
@@ -186,7 +188,7 @@ Route::get('/test/collection', function(){
 });
 
 
-Route::get('/test/models', function(){
+Route::get('/test/models', function () {
     dump('Route de manipulation de modele');
     // dump(DB::table('categories')->get());
     // dump(Category::orderBy('id')->limit(10)->offset(20)->pluck('label'));
@@ -235,7 +237,7 @@ Route::get('/test/models', function(){
 //     );
 // });
 
-Route::get('/test/relation', function(){
+Route::get('/test/relation', function () {
     // $articles = Article::query()->select('articles.label as libelle','categories.label as category')->join('categories','articles.category_id','=', 'categories.id')->get();
     // dump('Article : nom article, Categorie : nom categorie');
     //dd('message 2'); //die and dump
@@ -248,7 +250,7 @@ Route::get('/test/relation', function(){
     dump($articles);
 });
 
-Route::get('/exercice', function(){
+Route::get('/exercice', function () {
     $clients = Client::with('user')->get();
     $staffs = Staff::with('user')->get();
 
@@ -277,6 +279,4 @@ Route::get('/exercice', function(){
     dump($orders);
 
     dump(Article::first()->orders);
-
-
 });

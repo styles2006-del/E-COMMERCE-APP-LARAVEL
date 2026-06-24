@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class StaffController extends Controller
 {
@@ -24,7 +25,8 @@ class StaffController extends Controller
      */
     public function create()
     {
-        return view('staff.create');
+        $roles = Role::query()->select('*')->where('name','!=','client')->get();
+        return view('staff.create',compact('roles'));
     }
 
     /**
@@ -40,22 +42,10 @@ class StaffController extends Controller
             'phone' => 'required|string|max:30|unique:users,phone',
             'birth_date' => 'required|date',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8',
+            'password' => 'required|min:8|alpha_num:ascii',
+            'confirmPassword' => 'required|min:8|alpha_num:ascii|same:confirmPassword',
+            'role' => 'required|exists:roles,name'
         ]);
-
-        // $user = User::create([
-        //     'firstname' => $validated['firstname'],
-        //     'lastname' => $validated['lastname'],
-        //     'gender' => $validated['gender'],
-        //     'phone' => $validated['phone'],
-        //     'birth_day' => $validated['birth_date'],
-        //     'email' => $validated['email'],
-        //     'password' => $validated['password'],
-        // ]);
-
-        // Staff::create([
-        //     'user_id' => $user->id,
-        // ]);
 
         DB::transaction(function () use ($validated) {
             $user = User::create([
@@ -71,8 +61,9 @@ class StaffController extends Controller
             Staff::create([
                 'user_id' => $user->id,
             ]);
-        });
 
+            $user->assignRole($validated['role']);
+        });
 
         return redirect()->route('admin.staff.index');
     }
@@ -90,7 +81,8 @@ class StaffController extends Controller
      */
     public function edit(Staff $staff)
     {
-        return view('staff.edit', compact('staff'));
+        $roles = Role::query()->select('*')->where('name','!=','client')->get();
+        return view('staff.edit', compact('staff','roles'));
     }
 
     /**
@@ -105,7 +97,8 @@ class StaffController extends Controller
             'phone' => ['required', 'string', 'max:30', Rule::unique('users')->ignore($staff->user_id)],
             'birth_date' => ['required', 'date'],
             'email' => ['required', 'email', Rule::unique('users')->ignore($staff->user_id)],
-            'password' => ['required', 'min:8'],
+            'password' => ['required', 'min:8','alpha_num:ascii'],
+            'confirmPassword' => ['required', 'min:8', 'same:password','alpha_num:ascii']
         ]);
 
         DB::transaction(function () use($staff,$validated){

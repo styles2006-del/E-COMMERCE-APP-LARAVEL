@@ -14,10 +14,13 @@ class HomeController extends Controller
     }
 
     public function homePage(Request $request){
-        return view('home');
+        $search = $request->input('search');
+        $query = Article::query();
+        if ($search !== null) {
+            $query->where('label','like','%'.$search.'%');
+        }
+        $articles = $query->paginate(1);
+        return view('home',compact('articles','search'));
     }
 
-    public function checkOutPage(){
-        return view('checkOut');
-    }
 }
