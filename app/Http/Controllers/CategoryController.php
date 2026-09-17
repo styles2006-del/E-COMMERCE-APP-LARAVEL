@@ -6,8 +6,13 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class CategoryController extends Controller
+use Spatie\Permission\Middleware\RoleMiddleware;
+use Spatie\Permission\Middleware\PermissionMiddleware;
+
+class CategoryController extends Controller implements HasMiddleware
 {
     /**
      * Display a listing of the resource.
@@ -102,5 +107,15 @@ class CategoryController extends Controller
     {
         $category->delete();
         return redirect()->route('admin.categories.index');
+    }
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:categorie.view', only:['index','show']),
+            new Middleware('permission:categorie.create', only:['create','store']),
+            new Middleware('permission:categorie.update', only:['edit','update']),
+            new Middleware('permission:categorie.delete', only:['destroy']),
+        ];
     }
 }

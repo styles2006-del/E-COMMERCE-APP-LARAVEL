@@ -28,6 +28,6 @@ class Article extends Model
     public $timestamps = false;
 
     public function orders():BelongsToMany{
-        return $this->belongsToMany(Order::class, 'order_lines')->using(OrderLine::class);
+        return $this->belongsToMany(Order::class, 'order_lines')->using(OrderLine::class)->withPivot('quantity', 'price', 'amount');
     }
 }

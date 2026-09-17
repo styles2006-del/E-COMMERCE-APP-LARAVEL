@@ -22,6 +22,20 @@ class PermissionSeeder extends Seeder
             'article.create',
             'article.update',
             'article.delete',
+            'categorie.view',
+            'categorie.create',
+            'categorie.update',
+            'categorie.delete',
+            'orders.view',
+            'orders.reject',
+            'orders.confirm',
+            'orders.start',
+            'staff.view',
+            'staff.create',
+            'staff.update',
+            'staff.delete',
+            'order.checkout',
+            'order.callback',
        ];
 
        foreach ($permission_name as $name) {

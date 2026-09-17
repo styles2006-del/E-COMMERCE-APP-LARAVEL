@@ -8,8 +8,14 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class StaffController extends Controller
+use Spatie\Permission\Middleware\RoleMiddleware;
+use Spatie\Permission\Middleware\PermissionMiddleware;
+
+
+class StaffController extends Controller implements HasMiddleware
 {
     /**
      * Display a listing of the resource.
@@ -123,5 +129,15 @@ class StaffController extends Controller
     {
         $staff->delete();
         return redirect()->route('admin.staff.index');
+    }
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:staff.view', only:['index','show']),
+            new Middleware('permission:staff.create', only:['create','store']),
+            new Middleware('permission:staff.update', only:['edit','update']),
+            new Middleware('permission:staff.delete', only:['destroy']),
+        ];
     }
 }

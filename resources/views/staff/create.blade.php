@@ -1,112 +1,142 @@
 @extends('layouts.admin.base', [
-    'page_title' => 'Staff | create',
+    'page_title' => 'Staff | Création',
 ])
+
 @section('content')
-    <div>
-        <div>
-            <h1 class="text-3xl text-center py-3">Ajouter un Employé</h1>
+    <div class="max-w-3xl mx-auto space-y-6">
+        <!-- Header -->
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Ajouter un Employé</h1>
+                <p class="text-xs text-slate-500 mt-1">Créez un profil pour un nouveau membre de l'équipe.</p>
+            </div>
+            <a href="{{ route('admin.staff.index') }}" class="secondary-button">
+                <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                <span>Retour</span>
+            </a>
         </div>
-        <div>
-            <form action="{{ route('admin.staff.store') }}" method="POST"
-                class="border border-gray-100 p-6 rounded-2xl shadow-2xl space-y-3 p-8">
+
+        <!-- Form Card Container -->
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 sm:p-8">
+            <form action="{{ route('admin.staff.store') }}" method="POST" class="space-y-6">
                 @csrf
-                <div class="flex flex-col">
-                    <label for="firstname" class="text-sm">Nom:</label>
-                    <input type="text" id="firstname" name="firstname"
-                        class="border border-gray-200 px-2 py-1 rounded rounded-lg" value="{{ old('firstname') }}"
-                        placeholder="TRAFALGARE">
-                    @error('firstname')
-                        <div>{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="flex flex-col">
-                    <label for="lastname">Prénom:</label>
-                    <input type="text" id="lastname" name="lastname"
-                        class="border border-gray-200 px-2 py-1 rounded rounded-lg" value="{{ old('lastname') }}"
-                        placeholder="law">
-                    @error('lastname')
-                        <div>{{ $message }}</div>
-                    @enderror
-                </div>
-                <div>
-                    <div>Sexe:</div>
-                    <div class="flex space-x-5">
-                        <div>
-                            <input type="radio" id="masculin" name="gender" value="M">
-                            <label for="masculin">Homme</label>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <!-- Nom -->
+                    <div>
+                        <label for="firstname" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">Nom *</label>
+                        <input type="text" id="firstname" name="firstname" value="{{ old('firstname') }}" required placeholder="Ex: KOUASSI"
+                            class="input-premium" />
+                        @error('firstname')
+                            <p class="text-rose-500 text-xs mt-1.5 font-medium">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Prénom -->
+                    <div>
+                        <label for="lastname" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">Prénom *</label>
+                        <input type="text" id="lastname" name="lastname" value="{{ old('lastname') }}" required placeholder="Ex: Jean-Marc"
+                            class="input-premium" />
+                        @error('lastname')
+                            <p class="text-rose-500 text-xs mt-1.5 font-medium">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Genre -->
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">Genre *</label>
+                        <div class="flex items-center gap-6 py-2">
+                            <label class="flex items-center gap-2 cursor-pointer text-sm font-medium text-slate-700">
+                                <input type="radio" id="masculin" name="gender" value="M" class="size-4 text-indigo-600 focus:ring-indigo-500" {{ old('gender') == 'M' ? 'checked' : '' }} />
+                                <span>Homme (M)</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer text-sm font-medium text-slate-700">
+                                <input type="radio" id="feminin" name="gender" value="F" class="size-4 text-indigo-600 focus:ring-indigo-500" {{ old('gender') == 'F' ? 'checked' : '' }} />
+                                <span>Femme (F)</span>
+                            </label>
                         </div>
-                        <div>
-                            <input type="radio" id="feminin" name="gender" value="F">
-                            <label for="feminin">Femme</label>
-                        </div>
+                        @error('gender')
+                            <p class="text-rose-500 text-xs mt-1 font-medium">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Date de naissance -->
+                    <div>
+                        <label for="birth_date" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">Date de naissance *</label>
+                        <input type="date" id="birth_date" name="birth_date" value="{{ old('birth_date') }}" required
+                            class="input-premium" />
+                        @error('birth_date')
+                            <p class="text-rose-500 text-xs mt-1.5 font-medium">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Téléphone -->
+                    <div>
+                        <label for="phone" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">Téléphone *</label>
+                        <input type="text" id="phone" name="phone" value="{{ old('phone') }}" required placeholder="Ex: 0700000000"
+                            class="input-premium" />
+                        @error('phone')
+                            <p class="text-rose-500 text-xs mt-1.5 font-medium">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label for="email" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">Email *</label>
+                        <input type="email" id="email" name="email" value="{{ old('email') }}" required placeholder="employe@exemple.com"
+                            class="input-premium" />
+                        @error('email')
+                            <p class="text-rose-500 text-xs mt-1.5 font-medium">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Role -->
+                    <div class="sm:col-span-2">
+                        <label for="role" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">Rôle / Attribution *</label>
+                        <select name="role" id="role" class="input-premium">
+                            @forelse ($roles as $role)
+                                <option value="{{ $role->name }}" {{ old('role') == $role->name ? 'selected' : '' }}>
+                                    {{ $role->name }}
+                                </option>
+                            @empty
+                                <option value="">Aucun rôle disponible</option>
+                            @endforelse
+                        </select>
+                        @error('role')
+                            <p class="text-rose-500 text-xs mt-1.5 font-medium">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label for="password" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">Mot de passe *</label>
+                        <input type="password" id="password" name="password" required placeholder="••••••••"
+                            class="input-premium" />
+                        @error('password')
+                            <p class="text-rose-500 text-xs mt-1.5 font-medium">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div>
+                        <label for="confirmPassword" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">Confirmer le mot de passe *</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="••••••••"
+                            class="input-premium" />
+                        @error('confirmPassword')
+                            <p class="text-rose-500 text-xs mt-1.5 font-medium">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
-                <div class="flex flex-col">
-                    <label for="birth_date">Date de naissance:</label>
-                    <input type="date" id="birth_date" name="birth_date"
-                        class="border border-gray-200 px-2 py-1 rounded rounded-lg" value="{{ old('birth_date') }}">
-                    @error('birth_date')
-                        <div>{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="flex flex-col">
-                    <label for="phone">Téléphone:</label>
-                    <input type="text" id="phone" name="phone"
-                        class="border border-gray-200 px-2 py-1 rounded rounded-lg" value="{{ old('phone') }}"
-                        placeholder="71397764">
-                    @error('phone')
-                        <div>{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="flex flex-col">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email"
-                        class="border border-gray-200 px-2 py-1 rounded rounded-lg" value="{{ old('email') }}"
-                        placeholder="asta22157@gail.com">
-                    @error('email')
-                        <div>{{ $message }}</div>
-                    @enderror
-                </div>
-                <div>
-                    <label for="role">Role:</label>
-                    <select name="role" id="role"
-                        class="border border-gray-200 px-2 py-1 rounded rounded-lg w-full">
-                        @forelse ($roles as $role)
-                            <option value="{{ $role->name }}">{{ $role->name }}</option>
-                        @empty
-                            aucun role disponible
-                        @endforelse
-                    </select>
-                    @error('role')
-                        <div>{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="flex flex-col">
-                    <label for="password">Mot de passe:</label>
-                    <input type="password" id="password" name="password"
-                        class="border border-gray-200 px-2 py-1 rounded rounded-lg" value="{{ old('password') }}"
-                        placeholder="*********">
-                    @error('password')
-                        <div>{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="flex flex-col">
-                    <label for="confirmPassword">Confirmer Mot de passe:</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword"
-                        class="border border-gray-200 px-2 py-1 rounded rounded-lg" value="{{ old('confirmPassword') }}"
-                        placeholder="*********">
-                    @error('ConfirmPassword')
-                        <div>{{ $message }}</div>
-                    @enderror
-                </div>
-                <div>
-                    <button type="submit" class="primary-button justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-4">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
+
+                <div class="pt-4 border-t border-slate-100 flex justify-end gap-3">
+                    <a href="{{ route('admin.staff.index') }}" class="secondary-button">Annuler</a>
+                    <button type="submit" class="primary-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
-                        Ajouter
+                        <span>Créer le profil employé</span>
                     </button>
                 </div>
             </form>

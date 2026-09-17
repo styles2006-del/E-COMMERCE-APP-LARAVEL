@@ -1,64 +1,115 @@
-@extends('layouts.admin.base')
+@extends('layouts.admin.base', [
+    'page_title' => 'Articles | Modification',
+])
+
 @section('content')
-    <div>
-        <h1 class="text-3xl text-center py-3">Formulaire de modification d'un article</h1>
-        <div class="p-6 space-y-6">
-            <form action="{{ route('admin.articles.update', $article->id) }}" method="post" enctype="multipart/form-data">
+    <div class="max-w-4xl mx-auto space-y-6">
+        <!-- Header -->
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Modifier l'Article #{{ $article->id }}</h1>
+                <p class="text-xs text-slate-500 mt-1">Mettez à jour les informations relatives à ce produit.</p>
+            </div>
+            <a href="{{ route('admin.articles.index') }}" class="secondary-button">
+                <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                <span>Retour</span>
+            </a>
+        </div>
+
+        <!-- Form Card Container -->
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 sm:p-8">
+            <form action="{{ route('admin.articles.update', $article->id) }}" method="post" enctype="multipart/form-data" class="space-y-6">
                 @method('PUT')
                 @csrf
-                <div class="grid grid-cols-6 gap-6">
-                    <div class="col-span-6 sm:col-span-3">
-                        <label for="label" class="text-sm font-medium text-gray-900 block mb-2">Libellé : </label>
-                        <input type="text" name="label" id="label" value="{{ old('label', $article->label) }}"class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <!-- Libellé -->
+                    <div class="sm:col-span-2">
+                        <label for="label" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">Libellé de l'article *</label>
+                        <input type="text" name="label" id="label" value="{{ old('label', $article->label) }}" required
+                            class="input-premium" />
                         @error('label')
-                            {{ $message }}
+                            <p class="text-rose-500 text-xs mt-1.5 font-medium">{{ $message }}</p>
                         @enderror
                     </div>
-                    <div class="col-span-6 sm:col-span-3">
-                        <label for="prix" class="text-sm font-medium text-gray-900 block mb-2">Prix : </label>
-                        <input type="number" name="prix" id="prix"
-                            value="{{ old('prix', $article->current_price) }}"class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5">
+
+                    <!-- Prix -->
+                    <div>
+                        <label for="prix" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">Prix (FCFA) *</label>
+                        <input type="number" name="prix" id="prix" value="{{ old('prix', $article->current_price) }}" required
+                            class="input-premium" />
                         @error('prix')
-                            {{ $message }}
+                            <p class="text-rose-500 text-xs mt-1.5 font-medium">{{ $message }}</p>
                         @enderror
                     </div>
-                    <div class="col-span-6 sm:col-span-3">
-                        <label for="quantity" class="text-sm font-medium text-gray-900 block mb-2">Quantité : </label>
-                        <input type="number" name="quantity" id="quantity"
-                            value="{{ old('quantity', $article->quantity) }}"class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5">
+
+                    <!-- Quantité -->
+                    <div>
+                        <label for="quantity" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">Quantité en stock *</label>
+                        <input type="number" name="quantity" id="quantity" value="{{ old('quantity', $article->quantity) }}" required
+                            class="input-premium" />
                         @error('quantity')
-                            {{ $message }}
+                            <p class="text-rose-500 text-xs mt-1.5 font-medium">{{ $message }}</p>
                         @enderror
                     </div>
-                    <div class="col-span-6 sm:col-span-3">
-                        <label for="category" class="text-sm font-medium text-gray-900 block mb-2">Categorie : </label>
-                        <select name="category" id="category" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5">
+
+                    <!-- Catégorie -->
+                    <div class="sm:col-span-2">
+                        <label for="category" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">Catégorie</label>
+                        <select name="category" id="category" class="input-premium">
                             @forelse ($categories as $categorie)
-                                <option value="{{ $categorie->id }}" @selected(old("category",$article->category_id) == $categorie->id)>{{ $categorie->label }}</option>
+                                <option value="{{ $categorie->id }}" @selected(old('category', $article->category_id) == $categorie->id)>
+                                    {{ $categorie->label }}
+                                </option>
                             @empty
-                                <option value="">Aucune catégorie disponibles</option>
+                                <option value="">Aucune catégorie disponible</option>
                             @endforelse
                         </select>
-                    </div>
-                    <div class="col-span-full">
-                        <label for="description" class="text-sm font-medium text-gray-900 block mb-2">Description : </label>
-                        <textarea name="description" id="description" cols="30" rows="10" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-4">{{ old('description', $article->description) }}</textarea><br>
-                        @error('description')
-                            {{ $message }}
+                        @error('category')
+                            <p class="text-rose-500 text-xs mt-1.5 font-medium">{{ $message }}</p>
                         @enderror
                     </div>
-                    <div class="col-span-6 sm:col-span-3">
-                        <label for="image" class="text-sm font-medium text-gray-900 block mb-2">Image : </label>
+
+                    <!-- Description -->
+                    <div class="sm:col-span-2">
+                        <label for="description" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">Description</label>
+                        <textarea name="description" id="description" rows="4"
+                            class="input-premium py-3">{{ old('description', $article->description) }}</textarea>
+                        @error('description')
+                            <p class="text-rose-500 text-xs mt-1.5 font-medium">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Image Cover Field & Current Image Preview -->
+                    <div class="sm:col-span-2 space-y-3">
+                        <label for="image" class="block text-xs font-semibold uppercase tracking-wider text-slate-700">Image de couverture</label>
+                        
+                        @if ($article->cover)
+                            <div class="flex items-center gap-4 p-3 rounded-xl bg-slate-50 border border-slate-200 w-fit">
+                                <img src="{{ asset('/storage/' . $article->cover) }}" alt="Cover" class="size-16 object-cover rounded-lg shadow-xs" />
+                                <span class="text-xs text-slate-500">Image actuelle</span>
+                            </div>
+                        @endif
+
                         <input name="cover_field" id="image" type="file"
-                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"><br>
+                            class="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer transition-all" />
                         @error('cover_field')
-                            {{ $message }}
+                            <p class="text-rose-500 text-xs mt-1.5 font-medium">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
-                <button type="submit" class="primary-button justify-center">
-                    Update
-                </button>
+
+                <div class="pt-4 border-t border-slate-100 flex justify-end gap-3">
+                    <a href="{{ route('admin.articles.index') }}" class="secondary-button">Annuler</a>
+                    <button type="submit" class="primary-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        <span>Mettre à jour</span>
+                    </button>
+                </div>
             </form>
         </div>
     </div>

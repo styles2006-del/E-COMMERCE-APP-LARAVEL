@@ -24,7 +24,7 @@ return new class extends Migration
             $table->foreign('article_id')->references('id')->on('articles')->onDelete('set null');
 
             // contrainte niveau table
-            $table->primary('order_id','article_id');
+            $table->primary(['order_id','article_id']);
         });
     }
 

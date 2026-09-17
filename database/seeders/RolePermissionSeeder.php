@@ -17,9 +17,12 @@ class RolePermissionSeeder extends Seeder
     {
         $role_client = Role::where('name','client')->first();
         $role_manager = Role::where('name','manager')->first();
-        $client_permission = Permission::where('name','article.view')->get();
+        $role_delivery_person = Role::where('name','delivery person')->first();
+        $client_permission = Permission::whereIn('name', ['order.checkout','order.callback'])->get();
         $manager_permission = Permission::all();
+        $delivery_person_permission = Permission::where('name','like','%orders.%')->get();
         $role_client->syncPermissions($client_permission);
         $role_manager->syncPermissions($manager_permission);
+        $role_delivery_person->syncPermissions($delivery_person_permission);
     }
 }

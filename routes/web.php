@@ -6,7 +6,9 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SettingController;
 use App\Http\Middleware\WatchMiddleware;
+use App\Http\Controllers\ClientController;
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\Client;
@@ -86,6 +88,9 @@ Route::name('admin.')->prefix('admin')->middleware('auth')->group(function () {
     Route::resource('articles', ArticleController::class);
 
     Route::resource('staff', StaffController::class);
+
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
 });
 
 
@@ -99,7 +104,7 @@ Route::put('/orders/delivered/{order}', [OrderController::class, 'deliveryConfir
 
 Route::prefix('order')->name('order.')->group(function () {
 
-    Route::post('/checkout', [OrderController::class, 'checkOutPage'])->name('checkout');
+    Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout')->middleware('watch');
 
     Route::get('/callback', [OrderController::class, 'callback'])->name('callback');
 });
@@ -107,9 +112,13 @@ Route::prefix('order')->name('order.')->group(function () {
 Route::get('/', [HomeController::class, 'homePage'])->name('homePage');
 
 
+Route::prefix('client')->name('client.')->group(function () {
+    Route::get('/register', [ClientController::class, 'registerPage'])->name('register');
+    Route::post('/register', [ClientController::class, 'register'])->name('register');
+    Route::get('/my-orders', [ClientController::class, 'myOrders'])->name('my-orders')->middleware('watch');
+});
 
-
-
+Route::post('generer-recu/{order}',[OrderController::class, 'genererRecu'])->name('recu');
 
 
 

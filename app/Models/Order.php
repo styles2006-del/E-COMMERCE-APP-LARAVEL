@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Order extends Model
 {
-    protected $fillable = ['delivery_status'];
+    protected $fillable = ['client_id', 'date','delivery_status', 'amount'];
     //
     public function articles():BelongsToMany{
-        return $this->belongsToMany(Article::class, 'order_lines')->using(OrderLine::class);
+        return $this->belongsToMany(Article::class, 'order_lines')->using(OrderLine::class)->withPivot('quantity', 'price', 'amount');
     }
 
     public function client():BelongsTo{
